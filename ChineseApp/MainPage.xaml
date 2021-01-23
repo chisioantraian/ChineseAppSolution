@@ -2,13 +2,70 @@
     x:Class="ChineseApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ChineseApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ChineseApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/ChineseResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ItemsPanelTemplate x:Key="charPinyinHorizontalPanelTemplate">
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+
+            <DataTemplate x:Key="charPinyinMainTemplate">
+                <StackPanel Background="White" Orientation="Vertical">
+                    <TextBlock
+                        Foreground="{Binding CharacterColor}"
+                        Style="{StaticResource ChineseCharacterStyle}"
+                        Text="{Binding ChineseCharacter}" />
+
+                    <TextBlock
+                        x:Name="caracterPronuntie"
+                        Style="{StaticResource PronounciationStyle}"
+                        Text="{Binding Pinyin}" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="wordsListItemTemplate">
+                <StackPanel Margin="0" Background="White">
+
+                    <ItemsControl
+                        ItemTemplate="{StaticResource charPinyinMainTemplate}"
+                        ItemsPanel="{StaticResource charPinyinHorizontalPanelTemplate}"
+                        ItemsSource="{Binding SimplifiedPinyinPairs}" />
+
+                    <ContentPresenter Content="{Binding DefinitionBlock}" />
+
+                </StackPanel>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="8*" />
+        </Grid.RowDefinitions>
+
+        <TextBox
+            Name="SearchBar"
+            Grid.Row="0"
+            KeyUp="SearchBar_KeyUp"
+            Style="{StaticResource SearchBarStyle}" />
+
+        <ListBox
+            x:Name="WordsList"
+            Grid.Row="1"
+            Background="White"
+            ItemTemplate="{StaticResource wordsListItemTemplate}"
+            Style="{StaticResource WordsListStyle}" />
 
     </Grid>
 </Page>
