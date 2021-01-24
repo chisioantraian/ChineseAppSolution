@@ -70,6 +70,12 @@ namespace ChineseApp
             ShowEnglishResult();
         }
 
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Button button = (Button)sender;
+            //button.
+        }
+
         private void ShowEnglishResult()
         {
             string text = this.SearchBar.Text;

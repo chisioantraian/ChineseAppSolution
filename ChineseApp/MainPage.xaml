@@ -54,11 +54,38 @@
             <RowDefinition Height="8*" />
         </Grid.RowDefinitions>
 
-        <TextBox
-            Name="SearchBar"
-            Grid.Row="0"
-            KeyUp="SearchBar_KeyUp"
-            Style="{StaticResource SearchBarStyle}" />
+        <Grid Grid.Row="0" Background="WhiteSmoke">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="15*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Margin="3,16,6,12"
+                Padding="10"
+                Background="LightGray"
+                Content="Settings"
+                CornerRadius="16">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Show 20 random words" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Change to english input" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Change to chinese input" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBox
+                Name="SearchBar"
+                Grid.Column="1"
+                KeyUp="SearchBar_KeyUp"
+                Style="{StaticResource SearchBarStyle}" />
+        </Grid>
+
+
 
         <ListBox
             x:Name="WordsList"
