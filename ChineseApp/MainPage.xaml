@@ -82,6 +82,7 @@
                 Name="SearchBar"
                 Grid.Column="1"
                 KeyUp="SearchBar_KeyUp"
+                PlaceholderText="Enter your english word"
                 Style="{StaticResource SearchBarStyle}" />
         </Grid>
 
