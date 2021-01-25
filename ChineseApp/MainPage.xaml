@@ -62,11 +62,9 @@
 
             <Button
                 Grid.Column="0"
-                Margin="3,16,6,12"
+                Margin="12,16,6,12"
                 Padding="10"
-                Background="LightGray"
-                Content="Settings"
-                CornerRadius="16">
+                Content="Settings">
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Show 20 random words" />
