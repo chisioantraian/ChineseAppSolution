@@ -42,6 +42,11 @@
 
                     <ContentPresenter Content="{Binding DefinitionBlock}" />
 
+                    <!--<Rectangle
+                        Height="4"
+                        HorizontalAlignment="Stretch"
+                        Fill="Blue" />-->
+
                 </StackPanel>
             </DataTemplate>
 
@@ -86,7 +91,7 @@
 
 
 
-        <ListBox
+        <ListView
             x:Name="WordsList"
             Grid.Row="1"
             Background="White"
