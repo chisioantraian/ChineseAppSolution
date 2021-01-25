@@ -33,7 +33,11 @@
             </DataTemplate>
 
             <DataTemplate x:Key="wordsListItemTemplate">
-                <StackPanel Margin="0" Background="White">
+                <StackPanel
+                    Margin="0"
+                    Background="White"
+                    BorderBrush="Gray"
+                    BorderThickness="0,1,0,0">
 
                     <ItemsControl
                         ItemTemplate="{StaticResource charPinyinMainTemplate}"
@@ -65,12 +69,12 @@
                 <ColumnDefinition Width="15*" />
             </Grid.ColumnDefinitions>
 
-            <Button
+            <DropDownButton
                 Grid.Column="0"
                 Margin="12,16,6,12"
                 Padding="10"
                 Content="Settings">
-                <Button.Flyout>
+                <DropDownButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Show 20 random words" />
                         <MenuFlyoutSeparator />
@@ -78,8 +82,8 @@
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Change to chinese input" />
                     </MenuFlyout>
-                </Button.Flyout>
-            </Button>
+                </DropDownButton.Flyout>
+            </DropDownButton>
 
             <TextBox
                 Name="SearchBar"
@@ -91,12 +95,28 @@
 
 
 
-        <ListView
-            x:Name="WordsList"
-            Grid.Row="1"
-            Background="White"
-            ItemTemplate="{StaticResource wordsListItemTemplate}"
-            Style="{StaticResource WordsListStyle}" />
+        <Grid Grid.Row="1" Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ListView
+                x:Name="WordsList"
+                Grid.Column="0"
+                Background="White"
+                ItemTemplate="{StaticResource wordsListItemTemplate}"
+                Style="{StaticResource WordsListStyle}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="5" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+
+
 
     </Grid>
 </Page>
