@@ -46,11 +46,6 @@
 
                     <ContentPresenter Content="{Binding DefinitionBlock}" />
 
-                    <!--<Rectangle
-                        Height="4"
-                        HorizontalAlignment="Stretch"
-                        Fill="Blue" />-->
-
                 </StackPanel>
             </DataTemplate>
 
@@ -76,7 +71,7 @@
                 Content="Settings">
                 <DropDownButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Show 20 random words" />
+                        <MenuFlyoutItem Click="ShowRandom_Click" Text="Show 20 random words" />
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem Text="Change to english input" />
                         <MenuFlyoutSeparator />

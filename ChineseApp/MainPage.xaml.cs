@@ -203,5 +203,23 @@ namespace ChineseApp
             }
             return block;
         }
+
+        private void ShowRandom_Click(object sender, RoutedEventArgs e)
+        {
+            var randomWords = GetRandomWords();
+            UpdateShownWords(randomWords);
+        }
+
+        private IEnumerable<Word> GetRandomWords()
+        {
+            var random = new Random();
+            var result = new List<Word>();
+            for (int i = 0; i < 20; i++)
+            {
+                int index = random.Next(allWords.Count);
+                result.Add(allWords[index]);
+            }
+            return result;
+        }
     }
 }
