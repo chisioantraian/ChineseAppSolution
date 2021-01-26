@@ -73,9 +73,9 @@
                     <MenuFlyout>
                         <MenuFlyoutItem Click="ShowRandom_Click" Text="Show 20 random words" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Change to english input" />
+                        <MenuFlyoutItem Click="ChangeToEnglishInput_Click" Text="Change to english input" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Change to chinese input" />
+                        <MenuFlyoutItem Click="ChangeToChineseInput_Click" Text="Change to chinese input" />
                     </MenuFlyout>
                 </DropDownButton.Flyout>
             </DropDownButton>

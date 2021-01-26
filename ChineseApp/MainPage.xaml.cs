@@ -24,16 +24,32 @@ using Windows.UI.Xaml.Navigation;
 
 namespace ChineseApp
 {
+    public enum SelectedLanguage
+    {
+        English,
+        Chinese
+    }
+
+    public enum ChineseSystem
+    {
+        Simplified,
+        Traditional
+    }
 
     public sealed partial class MainPage : Page
     {
         private string wordsPath = @".\Assets\allWords.utf8";
         private List<Word> allWords;
+        private SelectedLanguage selectedLanguage = SelectedLanguage.English;
+
+        private delegate void ShowLanguageResult();
+        private ShowLanguageResult showLanguageResult;
 
         public MainPage()
         {
             this.InitializeComponent();
             this.allWords = BuildAllWords();
+            this.showLanguageResult = ShowEnglishResult;
             ApplicationView.GetForCurrentView().Title = $"{allWords.Count} words";
         }
 
@@ -67,13 +83,7 @@ namespace ChineseApp
                 return;
             }
 
-            ShowEnglishResult();
-        }
-
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            //Button button = (Button)sender;
-            //button.
+            showLanguageResult();
         }
 
         private void ShowEnglishResult()
@@ -220,6 +230,42 @@ namespace ChineseApp
                 result.Add(allWords[index]);
             }
             return result;
+        }
+
+        private void ChangeToEnglishInput_Click(object sender, RoutedEventArgs e)
+        {
+            this.SearchBar.Text = "";
+            this.SearchBar.PlaceholderText = "Enter your english word, then press enter";
+            this.selectedLanguage = SelectedLanguage.English;
+            this.showLanguageResult = ShowEnglishResult;
+        }
+
+        private void ChangeToChineseInput_Click(object sender, RoutedEventArgs e)
+        {
+            this.SearchBar.Text = "";
+            this.SearchBar.PlaceholderText = "Enter your characters/pinyin, then press enter";
+            this.selectedLanguage = SelectedLanguage.Chinese;
+            this.showLanguageResult = ShowChineseResult;
+        }
+
+        private void ShowChineseResult()
+        {
+            string text = this.SearchBar.Text;
+            var words = SearchBySimplified(text);
+            UpdateShownWords(words);
+        }
+
+        private IEnumerable<Word> SearchBySimplified(string text)
+        {
+            ChineseSystem writingSystem = ChineseSystem.Simplified;
+            if (writingSystem == ChineseSystem.Simplified)
+            {
+                return this.allWords.AsParallel().Where(w => w.Simplified.Contains(text));
+            }
+            else
+            {
+                return this.allWords.AsParallel().Where(w => w.Traditional.Contains(text));
+            }
         }
     }
 }
