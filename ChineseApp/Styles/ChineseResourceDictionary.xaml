@@ -25,4 +25,16 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
+    <Style x:Key="DecompositionPanelStyle" TargetType="TextBlock">
+        <Setter Property="Padding" Value="40,6,0,0" />
+        <Setter Property="FontSize" Value="18" />
+        <!--<Setter Property="Background" Value="Gainsboro" />-->
+    </Style>
+
+    <Style x:Key="ExtraPanelCounterStyle" TargetType="TextBlock">
+        <Setter Property="Padding" Value="40,6,0,0" />
+        <Setter Property="FontSize" Value="18" />
+        <!--<Setter Property="Background" Value="Gainsboro" />-->
+    </Style>
+
 </ResourceDictionary>

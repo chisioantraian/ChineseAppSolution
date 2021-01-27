@@ -1,6 +1,7 @@
 ﻿using ChineseApp.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -36,14 +37,31 @@ namespace ChineseApp
         Traditional
     }
 
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private string wordsPath = @".\Assets\allWords.utf8";
         private List<Word> allWords;
+        //private IEnumerable<ResultWord> shownWords;
         private SelectedLanguage selectedLanguage = SelectedLanguage.English;
 
-        private delegate void ShowLanguageResult();
+        private delegate void ShowLanguageResult(string text);
         private ShowLanguageResult showLanguageResult;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaiseProperty(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+
+        private List<ResultWord> shownWords = new List<ResultWord>();
+        public List<ResultWord> ShownWords
+        {
+            get => shownWords;
+            set
+            {
+                shownWords = value;
+                RaiseProperty(nameof(ShownWords));
+            }
+        }
+
 
         public MainPage()
         {
@@ -73,7 +91,7 @@ namespace ChineseApp
             };
         }
 
-        private void SearchBar_KeyUp(object sender, KeyRoutedEventArgs e)
+        private  async void SearchBar_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != Windows.System.VirtualKey.Enter)
                 return;
@@ -82,13 +100,13 @@ namespace ChineseApp
             {
                 return;
             }
-
-            showLanguageResult();
+            //showLanguageResult();
+            await Task.Run(() => showLanguageResult(this.SearchBar.Text));
         }
 
-        private void ShowEnglishResult()
+        private void ShowEnglishResult(string text)
         {
-            string text = this.SearchBar.Text;
+            //string text = this.SearchBar.Text;
             var englishResult = GetEnglishResult(text);
             UpdateShownWords(englishResult);
         }
@@ -106,7 +124,8 @@ namespace ChineseApp
 
         private void UpdateShownWords(IEnumerable<Word> filteredWords)
         {
-            this.WordsList.ItemsSource = filteredWords.Select(ResultedWordFromWord_Main);
+            //this.WordsList.ItemsSource = filteredWords.Select(ResultedWordFromWord_Main);
+            this.ShownWords = filteredWords.Select(ResultedWordFromWord_Main).ToList();
         }
 
         private ResultWord ResultedWordFromWord_Main(Word word)
@@ -248,12 +267,56 @@ namespace ChineseApp
             this.showLanguageResult = ShowChineseResult;
         }
 
-        private void ShowChineseResult()
+        private void ShowChineseResult(string text)
         {
-            string text = this.SearchBar.Text;
-            var words = SearchBySimplified(text);
+            //string text = this.SearchBar.Text;
+            IEnumerable<Word> words;
+            if (IsProbablyPinyin(text))
+            {
+                words = SearchByPinyin(text);
+            }
+            else
+            {
+                words = SearchBySimplified(text);
+            }
             UpdateShownWords(words);
         }
+
+        private const string pinyin = "   ,. 0123456789/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private bool IsProbablyPinyin(string text)
+        {
+            return text.Any(c => pinyin.Contains(c));
+        }
+
+
+        private IEnumerable<Word> SearchByPinyin(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return new List<Word>();
+            }
+            string[] prons = text.ToLower().Trim().Split(' ');
+            return allWords.AsParallel()
+                           .Where(CheckIfPinyinMatches);
+
+            bool CheckIfPinyinMatches(Word word)
+            {
+                string[] wordProns = word.Pinyin.ToLower().Split(' ');
+                if (prons.Length != wordProns.Length)
+                    return false;
+                for (int i = 0; i <= prons.Length - 1; i++)
+                {
+                    if (!wordProns[i].StartsWith(prons[i]))
+                        return false;
+                    if (wordProns[i] == prons[i])
+                        continue;
+                    if (wordProns[i].Length != (prons[i].Length + 1))
+                        return false;
+                }
+                return true;
+            }
+        }
+
 
         private IEnumerable<Word> SearchBySimplified(string text)
         {
@@ -267,5 +330,43 @@ namespace ChineseApp
                 return this.allWords.AsParallel().Where(w => w.Traditional.Contains(text));
             }
         }
+
+        private void CharacterAndPinyin_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            TextBlock textBlock = (TextBlock)sender;
+            char character = textBlock.Text[0];
+
+            if (IsNotExtraCharacter(character))
+            {
+                textBlock.FontWeight = FontWeights.Bold;
+                Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 0);
+            }
+        }
+
+        private bool IsNotExtraCharacter(char character)
+        {
+            return character != '〔' &&
+                    character != '〕' &&
+                    character != '-' &&
+                    character != ' ' &&
+                    character != '·';
+        }
+
+        private void CharacterAndPinyin_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            TextBlock textBlock = (TextBlock)sender;
+            textBlock.FontWeight = FontWeights.Normal;
+            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+        }
+
+        private void CharacterAndPinyin_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            TextBlock block = (TextBlock)sender;
+            ApplicationView.GetForCurrentView().Title = $"{block.Text}";
+            //FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(block);
+            //flyoutBase.ShowAt(block);
+
+        }
+
     }
 }
