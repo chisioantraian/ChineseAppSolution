@@ -28,12 +28,12 @@
                         Style="{StaticResource ChineseCharacterStyle}"
                         Text="{Binding ChineseCharacter}">
 
-                        <TextBlock.SelectionFlyout>
-                            <MenuFlyout>
+                        <TextBlock.Resources>
+                            <MenuFlyout x:Key="charpinKey">
                                 <MenuFlyoutItem Text="Decomposition to radicals of this character" />
 
                             </MenuFlyout>
-                        </TextBlock.SelectionFlyout>
+                        </TextBlock.Resources>
                     </TextBlock>
 
                     <TextBlock

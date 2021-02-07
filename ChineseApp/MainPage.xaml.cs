@@ -100,8 +100,10 @@ namespace ChineseApp
             {
                 return;
             }
-            //showLanguageResult();
-            await Task.Run(() => showLanguageResult(this.SearchBar.Text));
+            //showLanguageResult(this.SearchBar.Text);
+            //await Task.Run(() => showLanguageResult(this.SearchBar.Text));
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High,
+                () => showLanguageResult(this.SearchBar.Text));
         }
 
         private void ShowEnglishResult(string text)
@@ -124,8 +126,8 @@ namespace ChineseApp
 
         private void UpdateShownWords(IEnumerable<Word> filteredWords)
         {
-            //this.WordsList.ItemsSource = filteredWords.Select(ResultedWordFromWord_Main);
-            this.ShownWords = filteredWords.Select(ResultedWordFromWord_Main).ToList();
+            this.WordsList.ItemsSource = filteredWords.Select(ResultedWordFromWord_Main);
+            //this.ShownWords = filteredWords.Select(ResultedWordFromWord_Main).ToList();
         }
 
         private ResultWord ResultedWordFromWord_Main(Word word)
